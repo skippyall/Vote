@@ -1,4 +1,19 @@
 name: Vote
 version: '${project.version}'
-main: de.skipall.vote.Vote
+main: de.skipall.vote.VotePlugin
 api-version: '1.20'
+depend:
+  - CommandAPI
+
+permissions:
+  vote.add:
+    default: true
+  vote.remove:
+    default: true
+  vote.remove.others:
+    default: op
+  vote.show:
+    default: true
+  vote.hide:
+    default: true
+
