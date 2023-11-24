@@ -12,6 +12,7 @@ import dev.jorel.commandapi.SuggestionInfo;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -30,28 +31,41 @@ public class SpigotVoteCommand extends AbstractVoteCommand{
                                 .withAliases("open")
                                 .withArguments(new StringArgument("name"))
                                 .withOptionalArguments(new GreedyStringArgument("displayName"))
-                                .executesPlayer((player,args)->{add(player, args);}),
+                                .executes((sender,args)->{add(sender, args);}),
                         new CommandAPICommand("remove")
                                 .withPermission("vote.remove")
                                 .withAliases("close")
                                 .withArguments(new StringArgument("name").replaceSuggestions(SpigotVoteCommand::getEditableVoteSuggestions))
-                                .executesPlayer((player,args)->{remove(SpigotUtil.toUser(player),(String)args.get("name"));}),
+                                .executes((player,args)->{remove(SpigotUtil.toUser(player),(String)args.get("name"));}),
                         new CommandAPICommand("show")
                                 .withPermission("vote.show")
                                 .withArguments(new StringArgument("name").replaceSuggestions(SpigotVoteCommand::getVoteSuggestions))
-                                .executesPlayer((player,args)->{show(SpigotUtil.toUser(player),(String)args.get("name"));}),
+                                .executes((player,args)->{show(SpigotUtil.toUser(player),(String)args.get("name"));}),
                         new CommandAPICommand("hide")
                                 .withPermission("vote.hide")
-                                .executesPlayer((player,args)->{hide(SpigotUtil.toUser(player));}),
+                                .executes((player,args)->{hide(SpigotUtil.toUser(player));}),
                         new CommandAPICommand("list")
                                 .withPermission("vote.list")
-                                .executesPlayer((player,args)->{list(SpigotUtil.toUser(player));})
+                                .executes((player,args)->{list(SpigotUtil.toUser(player));})
                 ).register();
     }
 
-    private static void add(Player player, CommandArguments args) {
-        Result result = add(SpigotUtil.toUser(player),(String)args.get("name"), (String)args.get("displayName"));
-        result
+    private static void add(CommandSender sender, CommandArguments args) {
+        Result result = add(SpigotUtil.toUser(sender),(String)args.get("name"), (String)args.get("displayName"));
+        if (result == Result.NO_PROBLEM) {
+            sender.sendMessage("[Vote] Vote successfully created");
+        } else if (result == Result.ALREADY_EXIT) {
+            sender.sendMessage("[Vote] " + ChatColor.RED + "Vote successfully created");
+        }
+    }
+
+    private static void remove(CommandSender sender, CommandArguments args) {
+        Result result = add(SpigotUtil.toUser(sender),(String)args.get("name"), (String)args.get("displayName"));
+        if (result == Result.NO_PROBLEM) {
+            sender.sendMessage("[Vote] Vote successfully created");
+        } else if (result == Result.ALREADY_EXIT) {
+            sender.sendMessage("[Vote] " + ChatColor.RED + "Vote successfully created");
+        }
     }
 
     public static CompletableFuture<Suggestions> getVoteSuggestions(SuggestionInfo<CommandSender> info, SuggestionsBuilder builder) {
