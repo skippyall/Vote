@@ -3,12 +3,12 @@ package de.skipall.vote.core.user;
 import java.util.HashMap;
 
 public class User {
-    private static long idCounter=0;
+
     boolean isBot;
     boolean canEditOther;
     long id;
     String name;
-    private static HashMap<long,User> users=new HashMap<long, User>();
+
 
     public User(boolean isBot, boolean canEditOther, long id, String name) {
         this.isBot = isBot;
@@ -40,22 +40,15 @@ public class User {
         this.canEditOther = canEditOther;
     }
 
-    public void setUuid(long uuid) {
-        this.id = uuid;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public static User createUser(boolean isBot, boolean canEditOther, String name) {
-        User user = new User(isBot, canEditOther, newId(), name);
-        users.put(user.getId(),user);
-        return user;
+        return UserStorage.createUser(isBot, canEditOther, name);
     }
 
     public static User getUser(long id) {
-        return users.get(id);
-    }
-
-    private static long newId(){
-        idCounter++;
-        return idCounter;
+        return UserStorage.getUser(id);
     }
 }

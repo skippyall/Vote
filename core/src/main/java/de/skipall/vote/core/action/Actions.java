@@ -1,15 +1,14 @@
-package de.skipall.vote.core.command;
+package de.skipall.vote.core.action;
 
 import de.skipall.vote.core.misc.EnvironmentVars;
-import de.skipall.vote.core.misc.Result;
-import de.skipall.vote.core.storage.Vote;
-import de.skipall.vote.core.storage.VoteStorage;
+import de.skipall.vote.core.vote.Vote;
+import de.skipall.vote.core.vote.VoteStorage;
 import de.skipall.vote.core.user.User;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AbstractVoteCommand {
+public class Actions {
     public static Result add(User player, String name, String displayName){
         if (VoteStorage.containsVote(name)) {
             //player.sendMessage("Vote already exists");
@@ -19,15 +18,23 @@ public class AbstractVoteCommand {
         return Result.NO_PROBLEM;
     }
 
-    public static void remove(User user, String name){
+    public static Result remove(User user, String name){
         Vote vote = VoteStorage.getVote(name);
+        if (vote == null) {
+            return Result.NOT_EXIST;
+
+        }
         if (vote.isOwner(user) || user.canEditOther()) {
             VoteStorage.removeVote(name);
+            return Result.NO_PROBLEM;
+        } else {
+            return Result.NO_RIGHTS;
         }
     }
 
-    public static void show(User player, String name){
+    public static Result show(User player, String name){
         EnvironmentVars.logger.info(player.getName() + " showed " + name);
+        return Result.NO_PROBLEM;
     }
 
     public static void hide(User player){

@@ -15,4 +15,8 @@ public class SpigotSession extends Session {
     public void sendMessage(String message) {
         player.sendMessage(message);
     }
+
+    public static User findUser(CommandSender sender){
+        return null;
+    }
 }

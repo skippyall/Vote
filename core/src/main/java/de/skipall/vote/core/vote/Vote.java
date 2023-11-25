@@ -1,14 +1,14 @@
-package de.skipall.vote.core.storage;
+package de.skipall.vote.core.vote;
 
 import de.skipall.vote.core.user.User;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class Vote {
     private String name;
     private String displayName;
-    private List<Comment> discussion;
+    private Set<Comment> discussion;
     private User owner;
     private Map<User,VoteOption> votes;
 
@@ -23,7 +23,7 @@ public class Vote {
     }
 
     public boolean isOwner(User user) {
-        return owner.getUuid().equals(user.getUuid());
+        return owner.getId()==user.getId();
     }
 
     public String getName() {
@@ -36,5 +36,9 @@ public class Vote {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public void discuss(Comment c) {
+        discussion.add(c);
     }
 }

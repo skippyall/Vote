@@ -1,4 +1,4 @@
-package de.skipall.vote.core.storage;
+package de.skipall.vote.core.vote;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class VoteStorage {
-    private static final File file= new File(EnvironmentVars.dataFolder,"votes.yml");
+    private static final File file= new File(EnvironmentVars.dataFolder,"votes.json");
     private static final Gson gson= new Gson();
     private static Map<String,Vote> votes;
     public static void loadVotes() {
