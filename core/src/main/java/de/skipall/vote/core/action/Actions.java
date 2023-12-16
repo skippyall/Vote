@@ -45,12 +45,7 @@ public class Actions {
         return VoteStorage.getVotes().stream().map(e -> {
             return e.getDisplayName();
         }).toList();
-        /*for (Vote v: VoteStorage.getVotes()) {
-            TextComponent text = Component.text(v.getDisplayName());
-            text.clickEvent(ClickEvent.clickEvent(ClickEvent.Action.RUN_COMMAND, "/vote show " + v.getName()));
-            text.hoverEvent(HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT, Component.text(v.getName())));
-            player.sendMessage(text);
-        }*/
+        /**/
     }
 
     public static void getVoteSuggestions(Consumer<String> suggestionConsumer) {

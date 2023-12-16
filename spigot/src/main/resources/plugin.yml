@@ -1,6 +1,6 @@
-name: Vote
+name: VoteSpigot
 version: '${project.version}'
-main: de.skipall.spigot.Vote
+main: de.skipall.spigot.VoteSpigot
 api-version: '1.20'
 depend:
   - CommandAPI

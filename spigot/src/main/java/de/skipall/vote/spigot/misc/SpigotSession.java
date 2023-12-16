@@ -16,6 +16,10 @@ public class SpigotSession extends Session {
         player.sendMessage(message);
     }
 
+    public CommandSender getPlayer(){
+        return player;
+    }
+
     public static User findUser(CommandSender sender){
         return null;
     }

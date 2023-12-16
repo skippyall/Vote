@@ -10,12 +10,16 @@ import dev.jorel.commandapi.SuggestionInfo;
 import dev.jorel.commandapi.arguments.GreedyStringArgument;
 import dev.jorel.commandapi.arguments.StringArgument;
 import dev.jorel.commandapi.executors.CommandArguments;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.concurrent.CompletableFuture;
 
-public class SpigotVoteCommand extends Actions {
+public class SpigotVoteCommand {
     public SpigotVoteCommand() {
         initCommands();
     }
@@ -28,64 +32,77 @@ public class SpigotVoteCommand extends Actions {
                                 .withAliases("open")
                                 .withArguments(new StringArgument("name"))
                                 .withOptionalArguments(new GreedyStringArgument("displayName"))
-                                .executes((sender, args)-> {add(sender,args);}),
+                                .executes(SpigotVoteCommand::add),
                         new CommandAPICommand("remove")
                                 .withPermission("vote.remove")
                                 .withAliases("close")
                                 .withArguments(new StringArgument("name").replaceSuggestions(SpigotVoteCommand::getEditableVoteSuggestions))
-                                .executes((sender, args) -> {remove(sender, args);}),
+                                .executes(SpigotVoteCommand::remove),
                         new CommandAPICommand("show")
                                 .withPermission("vote.show")
                                 .withArguments(new StringArgument("name").replaceSuggestions(SpigotVoteCommand::getVoteSuggestions))
-                                .executes((sender,args)->{show(sender, args);}),
+                                .executes(SpigotVoteCommand::show),
                         new CommandAPICommand("hide")
                                 .withPermission("vote.hide")
-                                .executes((sender,args)->{hide(SpigotSession.findUser(sender));}),
+                                .executes(SpigotVoteCommand::hide),
                         new CommandAPICommand("list")
                                 .withPermission("vote.list")
-                                .executes((sender,args)->{list(SpigotSession.findUser(sender));})
+                                .executes(SpigotVoteCommand::list)
                 ).register();
     }
 
     private static void add(CommandSender sender, CommandArguments args) {
-        Result result = add(SpigotSession.findUser(sender),(String)args.get("name"), (String)args.get("displayName"));
+        Result result = Actions.add(SpigotSession.findUser(sender),(String)args.get("name"), (String)args.get("displayName"));
         if (result == Result.NO_PROBLEM) {
-            sender.sendMessage("[Vote] Vote successfully created");
+            sender.sendMessage("[VoteSpigot] VoteSpigot successfully created");
         } else if (result == Result.ALREADY_EXIT) {
-            sender.sendMessage("[Vote] " + ChatColor.RED + "Vote successfully created");
+            sender.sendMessage("[VoteSpigot] " + ChatColor.RED + "VoteSpigot successfully created");
         }
     }
 
     private static void remove(CommandSender sender, CommandArguments args) {
-        Result result = remove(SpigotSession.findUser(sender),(String)args.get("name"));
+        Result result = Actions.remove(SpigotSession.findUser(sender),(String)args.get("name"));
         if (result == Result.NO_PROBLEM) {
-            sender.sendMessage("[Vote] Vote successfully removed");
+            sender.sendMessage("[VoteSpigot] VoteSpigot successfully removed");
         } else if (result == Result.NOT_EXIST) {
-            sender.sendMessage("[Vote] " + ChatColor.RED + "Vote not exist");
+            sender.sendMessage("[VoteSpigot] " + ChatColor.RED + "VoteSpigot not exist");
         } else if (result == Result.NO_RIGHTS) {
-            sender.sendMessage("[Vote] " + ChatColor.RED + "No Rights to delete");
+            sender.sendMessage("[VoteSpigot] " + ChatColor.RED + "No Rights to delete");
         }
     }
 
     private static void show(CommandSender sender, CommandArguments args) {
-        /*Result result = show(SpigotUtil.toUser(sender),(String)args.get("name"));
-        if (result == Result.NO_PROBLEM) {
-            sender.sendMessage("[Vote] Vote successfully removed");
+        Result result = Actions.show(SpigotSession.findUser(sender),(String)args.get("name"));
+        /*if (result == Result.NO_PROBLEM) {
+            sender.sendMessage("[VoteSpigot] VoteSpigot successfully removed");
         } else if (result == Result.NOT_EXIST) {
-            sender.sendMessage("[Vote] " + ChatColor.RED + "Vote not exist");
+            sender.sendMessage("[VoteSpigot] " + ChatColor.RED + "VoteSpigot not exist");
         } else if (result == Result.NO_RIGHTS) {
-            sender.sendMessage("[Vote] " + ChatColor.RED + "No Rights to delete");
+            sender.sendMessage("[VoteSpigot] " + ChatColor.RED + "No Rights to delete");
         }*/
+    }
+
+    private static void hide(CommandSender sender, CommandArguments args){
+
+    }
+
+    private static void list(CommandSender sender, CommandArguments args){
+        for (String name: Actions.list(SpigotSession.findUser(sender))) {
+            TextComponent text = new TextComponent(name);
+            text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/vote show " + name));
+            text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(name)));
+            sender.spigot().sendMessage(text);
+        }
     }
 
     public static CompletableFuture<Suggestions> getVoteSuggestions(SuggestionInfo<CommandSender> info, SuggestionsBuilder builder) {
         info.sender().sendMessage("suggestion1");
-        getVoteSuggestions(e -> builder.suggest(e));
+        Actions.getVoteSuggestions(e -> builder.suggest(e));
         return builder.buildFuture();
     }
 
     public static CompletableFuture<Suggestions> getEditableVoteSuggestions(SuggestionInfo<CommandSender> var1, SuggestionsBuilder var2) {
-        getEditableVoteSuggestions(SpigotSession.findUser(var1.sender()), e -> var2.suggest(e));
+        Actions.getEditableVoteSuggestions(SpigotSession.findUser(var1.sender()), e -> var2.suggest(e));
         return var2.buildFuture();
     }
 }
