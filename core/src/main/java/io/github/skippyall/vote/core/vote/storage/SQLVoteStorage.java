@@ -1,13 +1,14 @@
 package io.github.skippyall.vote.core.vote.storage;
 
 import io.github.skippyall.vote.core.storage.SQLStorage;
+import io.github.skippyall.vote.core.storage.Storages;
+import io.github.skippyall.vote.core.user.User;
 import io.github.skippyall.vote.core.vote.Vote;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class SQLVoteStorage implements VoteStorage {
     @Override
@@ -15,25 +16,39 @@ public class SQLVoteStorage implements VoteStorage {
         SQLStorage.execute("""
              CREATE TABLE IF NOT EXISTS votes (
                     id INTEGER AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(20),
                     title VARCHAR(50),
                     desc TEXT,
                     possibilities SET,
-                    owner INTEGER
+                    owner INTEGER,
+                    createDate DATE
+             )
              """);
     }
 
     @Override
     public void save() {
+
     }
 
     private static Vote toVote(ResultSet set) {
-
+        try {
+            long id = set.getLong("id");
+            String title = set.getString("title");
+            String desc = set.getString("desc");
+//            Set desc = set.getString("desc");  TODO
+            User owner = Storages.USER_STORAGE.getUser(set.getLong("owner"));
+            Date createDate = set.getDate("createDate");
+            Vote vote = new Vote(owner, id);
+            vote.setDisplayName(title);
+            return vote;
+        }catch (SQLException e) {
+            return null;
+        }
     }
 
     @Override
     public Collection<Vote> getVotes() {
-        try (ResultSet set = SQLStorage.executeQuery("SELECT name, title, desc, possibilities, owner FROM votes")){
+        try (ResultSet set = SQLStorage.executeQuery("SELECT id, title, desc, possibilities, owner, createDate FROM votes")){
             Set<Vote> votes = new HashSet<>();
             while (set.next()){
                 votes.add(toVote(set));
@@ -45,35 +60,38 @@ public class SQLVoteStorage implements VoteStorage {
     }
 
     @Override
-    public Collection<String> getNames() {
-        try (ResultSet set = SQLStorage.executeQuery("SELECT cmdid FROM votes")) {
-            Collection<String> ids = new HashSet<>();
-            while (set.next()){
-                ids.add(set.getString("cmdid"));
-            }
-            return ids;
+    public Map<Long, String> getVoteTitles() {
+        return null;
+    }
+
+    @Override
+    public Vote getVote(long id) {
+        return null;
+    }
+
+    @Override
+    public boolean containsVote(long id) {
+        return false;
+    }
+
+    @Override
+    public Vote createVote(User owner) {
+        try(PreparedStatement statement = SQLStorage.prepareStatement(
+                "INSERT INTO votes(owner) VALUES(?)")){
+            statement.setLong(1, owner.getId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try(ResultSet set = SQLStorage.executeQuery("SELECT MAX(id) FROM users")){
+            return new Vote(owner, set.getLong("id"));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public Vote getVote(int id) {
-        return null;
-    }
-
-    @Override
-    public boolean containsVote(int id) {
-        return false;
-    }
-
-    @Override
-    public void addVote(Vote v) {
-
-    }
-
-    @Override
-    public void removeVote(int id) {
+    public void removeVote(long id) {
 
     }
 }

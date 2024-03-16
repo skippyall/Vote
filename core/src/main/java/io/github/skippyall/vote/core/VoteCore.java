@@ -5,11 +5,11 @@ import io.github.skippyall.vote.core.storage.Storages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VoteCoreClient {
-    public static final Logger LOGGER = LoggerFactory.getLogger("Vote");
+public class VoteCore {
+    public static final Logger LOGGER = LoggerFactory.getLogger("VoteCore");
     public static void init(){
         Config.load();
-        Storages.loadClient();
+        Storages.load();
     }
 
     public static void shutdown(){

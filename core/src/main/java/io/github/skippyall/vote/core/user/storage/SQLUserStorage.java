@@ -3,7 +3,6 @@ package io.github.skippyall.vote.core.user.storage;
 import io.github.skippyall.vote.core.storage.SQLStorage;
 import io.github.skippyall.vote.core.user.AuthID;
 import io.github.skippyall.vote.core.user.User;
-import io.github.skippyall.vote.core.user.storage.AbstractUserStorage;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -51,10 +50,12 @@ public class SQLUserStorage implements UserStorage {
             statement.setLong(0, id);
             try (ResultSet set = statement.executeQuery()) {
                 String name = set.getString("name");
-                return new User(id, name);
+                User user = new User(id);
+                user.setName(name);
+                return user;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return null;
         }
     }
 

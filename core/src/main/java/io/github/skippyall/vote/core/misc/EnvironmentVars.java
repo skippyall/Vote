@@ -8,5 +8,4 @@ import java.io.File;
 
 public class EnvironmentVars {
     public static File dataFolder;
-    public static VoteShower<?> shower;
 }

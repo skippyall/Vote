@@ -1,6 +1,6 @@
 package io.github.skippyall.vote.core.util;
 
-import io.github.skippyall.vote.core.VoteServer;
+import io.github.skippyall.vote.core.VoteCore;
 
 import java.util.function.Supplier;
 
@@ -10,7 +10,7 @@ public class Util {
             return toTry.get();
         } catch (Exception e) {
             if(warnMessage != null) {
-                VoteServer.LOGGER.warn(warnMessage, e);
+                VoteCore.LOGGER.warn(warnMessage, e);
             }
             return def;
         }

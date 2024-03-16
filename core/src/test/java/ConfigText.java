@@ -8,7 +8,7 @@ import java.io.File;
 public class ConfigText {
     public static void main(String[] args){
         Configurator.initialize(new DefaultConfiguration()).start();
-        EnvironmentVars.dataFolder = new File("/home/falko/IdeaProjects/Vote/core/src/test/resources");
+        EnvironmentVars.dataFolder = new File("/home/falko/IdeaProjects/VoteCore/core/src/test/resources");
         Config.load();
         System.out.println(Config.getStorageType().name());
         Config.save();

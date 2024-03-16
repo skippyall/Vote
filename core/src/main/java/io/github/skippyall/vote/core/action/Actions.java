@@ -1,7 +1,6 @@
 package io.github.skippyall.vote.core.action;
 
-import io.github.skippyall.vote.core.VoteServer;
-import io.github.skippyall.vote.core.vote.Vote;
+import io.github.skippyall.vote.core.VoteCore;
 import io.github.skippyall.vote.core.vote.storage.JsonVoteStorage;
 import io.github.skippyall.vote.core.user.User;
 
@@ -11,15 +10,15 @@ import java.util.function.Consumer;
 public class Actions {
     public static Result add(User player, String name, String displayName){
         if (JsonVoteStorage.containsVote(name)) {
-            //player.sendMessage("Vote already exists");
+            //player.sendMessage("VoteCore already exists");
             return Result.ALREADY_EXIT;
         }
-        JsonVoteStorage.addVote(new Vote(name, player, displayName));
+        JsonVoteStorage.addVote(new io.github.skippyall.vote.core.vote.Vote(name, player, displayName));
         return Result.NO_PROBLEM;
     }
 
     public static Result remove(User user, String name){
-        Vote vote = JsonVoteStorage.getVote(name);
+        io.github.skippyall.vote.core.vote.Vote vote = JsonVoteStorage.getVote(name);
         if (vote == null) {
             return Result.NOT_EXIST;
 
@@ -33,7 +32,7 @@ public class Actions {
     }
 
     public static Result show(User player, String name){
-        VoteServer.LOGGER.info(player.getName() + " showed " + name);
+        VoteCore.LOGGER.info(player.getName() + " showed " + name);
         return Result.NO_PROBLEM;
     }
 
@@ -48,7 +47,7 @@ public class Actions {
     }
 
     public static void getVoteSuggestions(Consumer<String> suggestionConsumer) {
-        for (Vote v: JsonVoteStorage.getVotes()) {
+        for (io.github.skippyall.vote.core.vote.Vote v: JsonVoteStorage.getVotes()) {
             suggestionConsumer.accept(v.getName());
         }
     }
@@ -56,13 +55,13 @@ public class Actions {
     public static void getEditableVoteSuggestions(User user, Consumer<String> suggestionConsumer) {
         boolean editOther = user.canEditOther();
         if (!user.isBot()) {
-            for (Vote v: JsonVoteStorage.getVotes()) {
+            for (io.github.skippyall.vote.core.vote.Vote v: JsonVoteStorage.getVotes()) {
                 if (v.isOwner(user) || editOther) {
                     suggestionConsumer.accept(v.getName());
                 }
             }
         } else if (editOther) {
-            for (Vote v: JsonVoteStorage.getVotes()) {
+            for (io.github.skippyall.vote.core.vote.Vote v: JsonVoteStorage.getVotes()) {
                 suggestionConsumer.accept(v.getName());
             }
         }

@@ -1,18 +1,19 @@
 package io.github.skippyall.vote.core.vote.storage;
 
-import io.github.skippyall.vote.core.storage.SyncedStorage;
+import io.github.skippyall.vote.core.user.User;
 import io.github.skippyall.vote.core.vote.Vote;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
 
-public class SyncedVoteStorage implements VoteStorage, SyncedStorage {
-    private final WeakHashMap<Integer, Vote> voteCache = new WeakHashMap<>();
+public class SyncedVoteStorage implements VoteStorage {
+    private final WeakHashMap<Long, Vote> voteCache = new WeakHashMap<>();
     private final Consumer<Vote> listener = this::pushVote;
 
     @Override
-    public Vote getVote(int id) {
+    public Vote getVote(long id) {
         if(voteCache.containsKey(id)){
             return voteCache.get(id);
         } else {
@@ -34,7 +35,12 @@ public class SyncedVoteStorage implements VoteStorage, SyncedStorage {
     }
 
     @Override
-    public boolean containsVote(int id) {
+    public Map<Long, String> getVoteTitles() {
+        return null;
+    }
+
+    @Override
+    public boolean containsVote(long id) {
         if(voteCache.containsKey(id)){
             return true;
         } else {
@@ -43,16 +49,16 @@ public class SyncedVoteStorage implements VoteStorage, SyncedStorage {
     }
 
     @Override
-    public void addVote(Vote v) {
-
+    public Vote createVote(User owner) {
+        return null;
     }
 
     @Override
-    public void removeVote(int id) {
+    public void removeVote(long id) {
 
     }
 
-    public Vote loadVote(int id) {
+    public Vote loadVote(long id) {
 
     }
 
@@ -64,11 +70,7 @@ public class SyncedVoteStorage implements VoteStorage, SyncedStorage {
 
     }
 
-    public boolean storageContainsVote(int id) {
-
-    }
-
-    public Collection<String> getNames() {
+    public boolean storageContainsVote(long id) {
 
     }
 

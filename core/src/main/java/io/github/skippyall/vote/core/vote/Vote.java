@@ -2,27 +2,33 @@ package io.github.skippyall.vote.core.vote;
 
 import io.github.skippyall.vote.core.user.User;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
 public class Vote {
-    private final int id;
+    private final long id;
     private String displayName;
     private Set<Comment> discussion;
     private final User owner;
-    private Map<User,VoteOption> votes;
+    private Set<String> voteOptions = new HashSet<>();
+    private Map<User,String> votes = new HashMap<>();
 
     private final Set<Consumer<Vote>> updateListeners = new HashSet<>();
 
-    public Vote(User owner, int id) {
+    public Vote(User owner, long id) {
         this.owner = owner;
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public User getOwner() {
@@ -33,8 +39,13 @@ public class Vote {
         return owner.getId()==user.getId();
     }
 
-    public void addVote(User user, VoteOption option){
-        votes.put(user, option);
+    public boolean addVote(User user, String option){
+        if(voteOptions.contains(option)) {
+            votes.put(user, option);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public String getDisplayName() {
@@ -43,6 +54,10 @@ public class Vote {
 
     public void discuss(Comment c) {
         discussion.add(c);
+    }
+
+    public Set<Comment> getDiscussion() {
+        return discussion;
     }
 
     public void copyInfo(Vote other) {

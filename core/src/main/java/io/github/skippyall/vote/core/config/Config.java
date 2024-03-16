@@ -1,6 +1,6 @@
 package io.github.skippyall.vote.core.config;
 
-import io.github.skippyall.vote.core.VoteServer;
+import io.github.skippyall.vote.core.VoteCore;
 import io.github.skippyall.vote.core.misc.EnvironmentVars;
 import io.github.skippyall.vote.core.storage.StorageType;
 
@@ -18,9 +18,6 @@ public class Config {
     public static StorageType getStorageType() {
         return STORAGE_TYPE;
     }
-
-
-    public static boolean CENTRAL_SERVER_ENABLED;
 
     private static String HOST;
 
@@ -47,14 +44,12 @@ public class Config {
         try(FileReader reader = new FileReader(FILE)) {
             properties.load(reader);
         } catch (IOException e) {
-            VoteServer.LOGGER.warn("Failed to load config", e);
+            VoteCore.LOGGER.warn("Failed to load config", e);
         }
 
         defaults.forEach(properties::putIfAbsent);
 
         STORAGE_TYPE = tryGetOrDefault(StorageType::valueOf, "storage_type", "storage_type must be SQLite or MySQL");
-
-        CENTRAL_SERVER_ENABLED = tryGetOrDefault(Boolean::getBoolean, "enable_central", "enable_central must be true or false");
 
         HOST = properties.getProperty("host");
         PORT = tryGetOrDefault(Integer::getInteger, "port", "port must be an integer");
@@ -62,7 +57,7 @@ public class Config {
 
     public static void save() {
         try(FileWriter writer = new FileWriter(FILE)) {
-            properties.store(writer, "Vote Configuration");
+            properties.store(writer, "VoteCore Configuration");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -73,7 +68,7 @@ public class Config {
             return toTry.apply(properties.getProperty(key));
         } catch (Exception e) {
             if(warnMessage != null) {
-                VoteServer.LOGGER.warn(warnMessage, e);
+                VoteCore.LOGGER.warn(warnMessage, e);
             }
             return toTry.apply(defaults.getProperty(key));
         }

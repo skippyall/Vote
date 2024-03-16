@@ -1,9 +1,12 @@
 package io.github.skippyall.vote.core.user;
 
+import io.github.skippyall.vote.core.network.NetworkInterface;
 import io.github.skippyall.vote.core.vote.Vote;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class User {
@@ -15,9 +18,8 @@ public class User {
 
     private final Set<Consumer<User>> updateListeners = new HashSet<>();
 
-    public User(long id, String name) {
+    public User(long id) {
         this.id = id;
-        this.name = name;
     }
 
     public boolean isBot() {
@@ -31,9 +33,18 @@ public class User {
     public long getId() {
         return id;
     }
-
     public String getName(){
+        if (name == null) {
+            CompletableFuture<String> future = NetworkInterface.getUserName(this);
+            try {
+                name = future.get();
+            }catch (Exception e) {}
+        }
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setBot(boolean user) {
@@ -48,11 +59,12 @@ public class User {
         this.id = id;
     }
 
+    @Deprecated()
     public void copyInfo(User other) {
         if(!(
                 isBot == other.isBot
                 && canEditOther == other.canEditOther
-                && name.equals(other.name)
+                && getName().equals(other.getName())
         )) {
             isBot = other.isBot;
             canEditOther = other.canEditOther;
@@ -78,4 +90,6 @@ public class User {
     public static User getUser(long id) {
         return JSONUserStorage.getUser(id);
     }*/
+
+
 }

@@ -1,20 +1,22 @@
 package io.github.skippyall.vote.core.vote.storage;
 
 import io.github.skippyall.vote.core.storage.Storage;
+import io.github.skippyall.vote.core.user.User;
 import io.github.skippyall.vote.core.vote.Vote;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface VoteStorage extends Storage {
     Collection<Vote> getVotes();
 
-    Collection<String> getNames();
+    Map<Long, String> getVoteTitles();
 
-    Vote getVote(int id);
+    Vote getVote(long id);
 
-    boolean containsVote(int id);
+    boolean containsVote(long id);
 
-    void addVote(Vote v);
+    Vote createVote(User owner);
 
-    void removeVote(int id);
+    void removeVote(long id);
 }
