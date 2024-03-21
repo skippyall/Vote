@@ -1,6 +1,7 @@
 package io.github.skippyall.vote.core.network.packets;
 
 import io.github.skippyall.vote.core.network.PacketBuffer;
+import io.github.skippyall.vote.core.network.handlers.NetworkHandler;
 import io.github.skippyall.vote.core.user.User;
 
 public class AnswerPacket extends Packet{
@@ -61,6 +62,11 @@ public class AnswerPacket extends Packet{
 
     public User getUser() {
         return user;
+    }
+
+    @Override
+    public void handle(NetworkHandler handler) {
+        handler.handle(this);
     }
 
     public static enum AnswerType{

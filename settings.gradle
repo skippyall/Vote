@@ -13,3 +13,5 @@ rootProject.name = 'Vote'
 include 'core'
 include 'spigot'
 include 'fabric'
+include 'server'
+

@@ -82,9 +82,11 @@ public class VoteGui {
         Set<Comment> comments = vote.getDiscussion();
         for(Comment comment:comments) {
             MutableText commentText = Text.literal("");
-            commentText.append(Text.literal(comment.getWriter().getName()).withColor(MapColor.GRAY.color));
+            commentText.append(Text.literal(comment.getWriter().getName()+"\n").withColor(MapColor.GRAY.color));
             commentText.append(Text.literal(comment.getText()));
             texts.add(commentText);
         }
+
+        openGui(player, texts);
     }
 }

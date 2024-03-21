@@ -18,5 +18,7 @@ public interface VoteStorage extends Storage {
 
     Vote createVote(User owner);
 
+    void addVote(Vote vote);
+
     void removeVote(long id);
 }

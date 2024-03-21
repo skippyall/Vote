@@ -1,6 +1,7 @@
 package io.github.skippyall.vote.core.storage;
 
 import io.github.skippyall.vote.core.user.storage.SQLUserStorage;
+import io.github.skippyall.vote.core.vote.storage.SQLVoteStorage;
 
 import java.sql.*;
 
@@ -19,6 +20,7 @@ public class SQLStorage implements Storage{
             throw new RuntimeException("Failed to connect to database", e);
         }
         Storages.USER_STORAGE = new SQLUserStorage();
+        Storages.VOTE_STORAGE = new SQLVoteStorage();
     }
 
     @Override

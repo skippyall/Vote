@@ -18,7 +18,7 @@ public class SQLVoteStorage implements VoteStorage {
                     id INTEGER AUTO_INCREMENT PRIMARY KEY,
                     title VARCHAR(50),
                     desc TEXT,
-                    possibilities SET,
+                    
                     owner INTEGER,
                     createDate DATE
              )
@@ -88,6 +88,11 @@ public class SQLVoteStorage implements VoteStorage {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void addVote(Vote vote) {
+
     }
 
     @Override

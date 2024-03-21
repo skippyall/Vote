@@ -1,7 +1,7 @@
 package io.github.skippyall.vote.core.vote.storage;
 
 
-
+/*
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.skippyall.vote.core.misc.EnvironmentVars;
@@ -12,10 +12,10 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Map;
+import java.util.Map;*/
 
 public class JsonVoteStorage {
-    private static final File file= new File(EnvironmentVars.dataFolder,"votes.json");
+    /*private static final File file= new File(EnvironmentVars.dataFolder,"votes.json");
     private static final Gson gson = new Gson();
     private static Map<String, Vote> votes;
     public static void loadVotes() {
@@ -74,5 +74,5 @@ public class JsonVoteStorage {
                 votes.remove(name);
             }
         });
-    }
+    }*/
 }

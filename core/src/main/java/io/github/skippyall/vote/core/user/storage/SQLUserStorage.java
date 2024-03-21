@@ -15,6 +15,7 @@ public class SQLUserStorage implements UserStorage {
              CREATE TABLE IF NOT EXISTS users (
                     id INTEGER AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(20)
+             )
              """);
     }
 

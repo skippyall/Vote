@@ -54,16 +54,22 @@ public class SyncedVoteStorage implements VoteStorage {
     }
 
     @Override
+    public void addVote(Vote vote) {
+        voteCache.put(vote.getId(), vote);
+        vote.registerUpdateListener(listener);
+    }
+
+    @Override
     public void removeVote(long id) {
 
     }
 
     public Vote loadVote(long id) {
-
+        return null;//TODO
     }
 
     public Collection<Vote> loadVotes() {
-
+        return null;//TODO
     }
 
     public void pushVote(Vote vote) {
@@ -71,14 +77,6 @@ public class SyncedVoteStorage implements VoteStorage {
     }
 
     public boolean storageContainsVote(long id) {
-
-    }
-
-    @Override
-    public void sync(){
-        voteCache.values().forEach(vote -> {
-            Vote updatedVote = loadVote(vote.getId());
-            vote.copyInfo(updatedVote);
-        });
+        return false;//TODO
     }
 }
