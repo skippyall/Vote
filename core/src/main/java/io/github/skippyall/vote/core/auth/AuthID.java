@@ -1,4 +1,4 @@
-package io.github.skippyall.vote.core.user;
+package io.github.skippyall.vote.core.auth;
 
 import java.util.Objects;
 
